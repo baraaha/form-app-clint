@@ -4,6 +4,7 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import InputFormGroup from '../../components/InputFormGroup';
 import SelectFormGroup from '../../components/SelectFormGroup';
 import FormServices from '../../services/FormServices';
+import NavBar from '../../components/NavBar';
 
 
 const defaultInputData = {
@@ -304,128 +305,130 @@ const FormBuilder = () => {
 
 
             )}
+            <>
+                <NavBar />
+                <div className="flex flex-wrap p-4 h-full">
+                    <div className="col-3 md:col-3 p-4 flex flex-col space-y-4">
+                        <div className="fixed">
+                            <button onClick={() => addElement("input")} className="flex w-80 items-center justify-start my-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <FontAwesomeIcon icon={faPlusCircle} className="mr-2" />
+                                Add Input
+                            </button>
+                            <button onClick={() => addElement("textarea")} className="flex w-80 items-center justify-start my-1 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                <FontAwesomeIcon icon={faPlusCircle} className="mr-2" />
+                                Add Textarea
+                            </button>
+                            <button onClick={() => addElement("select")} className="flex w-80 items-center justify-start my-1 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                <FontAwesomeIcon icon={faPlusCircle} className="mr-2" />
+                                Add Select
+                            </button>
+                            <button onClick={() => addElement("checkbox")} className="flex w-80 items-center justify-start my-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                                <FontAwesomeIcon icon={faPlusCircle} className="mr-2" />
+                                Add Checkbox
+                            </button>
 
-            <div className="flex flex-wrap p-4 h-full">
-                <div className="col-3 md:col-3 p-4 flex flex-col space-y-4">
-                    <div className="fixed">
-                        <button onClick={() => addElement("input")} className="flex w-80 items-center justify-start my-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            <FontAwesomeIcon icon={faPlusCircle} className="mr-2" />
-                            Add Input
-                        </button>
-                        <button onClick={() => addElement("textarea")} className="flex w-80 items-center justify-start my-1 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                            <FontAwesomeIcon icon={faPlusCircle} className="mr-2" />
-                            Add Textarea
-                        </button>
-                        <button onClick={() => addElement("select")} className="flex w-80 items-center justify-start my-1 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                            <FontAwesomeIcon icon={faPlusCircle} className="mr-2" />
-                            Add Select
-                        </button>
-                        <button onClick={() => addElement("checkbox")} className="flex w-80 items-center justify-start my-1 bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
-                            <FontAwesomeIcon icon={faPlusCircle} className="mr-2" />
-                            Add Checkbox
-                        </button>
-
-                    </div>
-                </div>
-                <div className='shadow-lg col-9 overflow-x-auto h-full'>
-                    {elements.length > 0 && (
-                        <div className="col-12 md:col-9  bg-white rounded-lg p-4">
-                            <div className='row bg-white rounded-lg shadow-md p-4 mb-4'>
-                                <InputFormGroup
-                                    label="title"
-                                    value={formData.title}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    error={validation?.title?.[0]}
-                                />
-                                <InputFormGroup
-                                    label="slug"
-                                    value={formData.slug}
-                                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                    error={validation?.slug?.[0]}
-
-                                />
-                                <InputFormGroup
-                                    label="submission limit"
-                                    type='number'
-                                    value={formData.submission_limit}
-                                    onChange={(e) => setFormData({ ...formData, submission_limit: e.target.value })}
-                                    error={validation?.submission_limit?.[0]}
-
-                                />
-                                <InputFormGroup
-                                    label="published at"
-                                    type='date'
-                                    value={formData.published_at}
-                                    onChange={(e) => setFormData({ ...formData, published_at: e.target.value })}
-                                    error={validation?.published_at?.[0]}
-
-                                />
-                                <InputFormGroup
-                                    label="expires at"
-                                    type='date'
-                                    value={formData.expires_at}
-                                    onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
-                                    error={validation?.expires_at?.[0]}
-
-                                />
-                                <SelectFormGroup
-                                    label="published"
-                                    value={formData.published}
-                                    onChange={(e) => setFormData({ ...formData, published: e.target.value })}
-                                    options={[
-                                        { name: 'Yes', id: 1 },
-                                        { name: 'No', id: 0 },
-                                    ]}
-                                    error={validation?.published?.[0]}
-
-                                />
-                                <SelectFormGroup
-                                    label="allow notifications"
-                                    value={formData.allow_notifications}
-                                    onChange={(e) => setFormData({ ...formData, allow_notifications: e.target.value })}
-                                    options={[
-                                        { name: 'Yes', id: true },
-                                        { name: 'No', id: false },
-                                    ]}
-                                    error={validation?.allow_notifications?.[0]}
-
-                                />
-
-
-                            </div>
                         </div>
-                    )}
-                    <div className="col-12 md:col-9  bg-white rounded-lg p-4">
-
-                        {elements.length > 0 ? elements.map((element, index) => {
-                            return (
-                                <div className="bg-white rounded-lg shadow-md p-4 mb-4 relative">
-
-
-
-                                    {element.element === 'input' && <InputElement index={index} edit={edit} onDelete={onDelete} element={element} />}
-                                    {element.element === 'textarea' && <TextareaElement index={index} edit={edit} onDelete={onDelete} element={element} />}
-                                    {element.element === 'select' && <SelectElement index={index} edit={edit} onDelete={onDelete} element={element} />}
-                                    {element.element === 'checkbox' && <CheckboxElement index={index} edit={edit} onDelete={onDelete} element={element} />}
-                                    {element.element === 'row' && <RowElement data={elements} setData={setElements} index={index} edit={edit} onDelete={onDelete} element={element} />}
-                                </div>
-                            )
-                        }) :
-                            <WelcomeSection />
-                        }
+                    </div>
+                    <div className='shadow-lg col-9 overflow-x-auto h-full'>
                         {elements.length > 0 && (
-                            <div className="col-12 p-4 flex justify-between items-center  bottom-0 left-0 right-0">
-                                <button onClick={clearForm} className="btn btn-danger rounded">Clear Form</button>
-                                <button onClick={submitForm} className="btn hover:bg-green-600 bg-green-500 text-white mx-2 rounded">Submit Form</button>
+                            <div className="col-12 md:col-9  bg-white rounded-lg p-4">
+                                <div className='row bg-white rounded-lg shadow-md p-4 mb-4'>
+                                    <InputFormGroup
+                                        label="title"
+                                        value={formData.title}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        error={validation?.title?.[0]}
+                                    />
+                                    <InputFormGroup
+                                        label="slug"
+                                        value={formData.slug}
+                                        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                                        error={validation?.slug?.[0]}
+
+                                    />
+                                    <InputFormGroup
+                                        label="submission limit"
+                                        type='number'
+                                        value={formData.submission_limit}
+                                        onChange={(e) => setFormData({ ...formData, submission_limit: e.target.value })}
+                                        error={validation?.submission_limit?.[0]}
+
+                                    />
+                                    <InputFormGroup
+                                        label="published at"
+                                        type='date'
+                                        value={formData.published_at}
+                                        onChange={(e) => setFormData({ ...formData, published_at: e.target.value })}
+                                        error={validation?.published_at?.[0]}
+
+                                    />
+                                    <InputFormGroup
+                                        label="expires at"
+                                        type='date'
+                                        value={formData.expires_at}
+                                        onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
+                                        error={validation?.expires_at?.[0]}
+
+                                    />
+                                    <SelectFormGroup
+                                        label="published"
+                                        value={formData.published}
+                                        onChange={(e) => setFormData({ ...formData, published: e.target.value })}
+                                        options={[
+                                            { name: 'Yes', id: 1 },
+                                            { name: 'No', id: 0 },
+                                        ]}
+                                        error={validation?.published?.[0]}
+
+                                    />
+                                    <SelectFormGroup
+                                        label="allow notifications"
+                                        value={formData.allow_notifications}
+                                        onChange={(e) => setFormData({ ...formData, allow_notifications: e.target.value })}
+                                        options={[
+                                            { name: 'Yes', id: true },
+                                            { name: 'No', id: false },
+                                        ]}
+                                        error={validation?.allow_notifications?.[0]}
+
+                                    />
+
+
+                                </div>
                             </div>
                         )}
+                        <div className="col-12 md:col-9  bg-white rounded-lg p-4">
+
+                            {elements.length > 0 ? elements.map((element, index) => {
+                                return (
+                                    <div className="bg-white rounded-lg shadow-md p-4 mb-4 relative">
+
+
+
+                                        {element.element === 'input' && <InputElement index={index} edit={edit} onDelete={onDelete} element={element} />}
+                                        {element.element === 'textarea' && <TextareaElement index={index} edit={edit} onDelete={onDelete} element={element} />}
+                                        {element.element === 'select' && <SelectElement index={index} edit={edit} onDelete={onDelete} element={element} />}
+                                        {element.element === 'checkbox' && <CheckboxElement index={index} edit={edit} onDelete={onDelete} element={element} />}
+                                        {element.element === 'row' && <RowElement data={elements} setData={setElements} index={index} edit={edit} onDelete={onDelete} element={element} />}
+                                    </div>
+                                )
+                            }) :
+                                <WelcomeSection />
+                            }
+                            {elements.length > 0 && (
+                                <div className="col-12 p-4 flex justify-between items-center  bottom-0 left-0 right-0">
+                                    <button onClick={clearForm} className="btn btn-danger rounded">Clear Form</button>
+                                    <button onClick={submitForm} className="btn hover:bg-green-600 bg-green-500 text-white mx-2 rounded">Submit Form</button>
+                                </div>
+                            )}
+                        </div>
+
                     </div>
 
+
+
                 </div>
-
-
-
-            </div>
+            </>
         </>
     );
 

@@ -1,5 +1,6 @@
 class BaseService {
     handleRequestError = (error) => {
+
         if (error.response) {
             // The request was made and the server responded with a status code
             // Handle specific status codes here
@@ -7,7 +8,7 @@ class BaseService {
                 const customError = {
                     ExceptionType: 'NotFoundError',
                     type: 'error',
-                    message: 'Expenses not found',
+                    message: 'Data not found',
                 };
                 throw customError;
             } else if (error.response.status === 422) {
@@ -19,11 +20,20 @@ class BaseService {
                     validationData: validationData, // Include validation data in the error object
                 };
                 throw customError;
-            } else {
+            }
+            else if (error.response.status === 400) {
+                const customError = {
+                    ExceptionType: 'ValidationError',
+                    type: 'error',
+                    message: error.response.data.message,
+                };
+                throw customError;
+            }
+            else {
                 const customError = {
                     ExceptionType: 'ServerError',
                     type: 'error',
-                    message: 'Server error',
+                    message: "Server Error",
                 };
                 throw customError;
             }

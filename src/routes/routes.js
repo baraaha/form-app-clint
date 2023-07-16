@@ -12,11 +12,24 @@ import Login from "../pages/auth/Login";
 import OtpVerification from "../pages/auth/OtpVerification";
 import Registration from "../pages/auth/Registration";
 import Auth from "../constants/Auth";
+import Submissions from "../pages/submissions/Submissions";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/submissions/:id" element={<Submissions />} />
+      {/* <ProtectedRoute path="/forms" element={<FormListContainer />} /> */}
+      <Route path="/forms" element={<FormListContainer />} />
+      <Route path="/form-create" element={<FormCreate />} />
+      <Route path="/form/:id" element={<DynamicForm />} />
+      <Route path="/registration" element={<Registration />} />
+      <Route path="/otp" element={<OtpVerification />} />
+
+      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<FormListContainer />} />
+      {/* 
       <Route path="/" element={
         <Auth>
           <FormListContainer />
@@ -28,6 +41,7 @@ const AppRoutes = () => {
       </Auth>} />
       <Route path="/form-create" element={<Auth>
         <FormCreate />
+        
       </Auth>} />
       <Route path="/form/:id" element={<Auth>
         <DynamicForm />
@@ -38,7 +52,7 @@ const AppRoutes = () => {
       <Route path="/registration" Component={Registration} />
       <Route path="/login" element={<Auth>
         <Login />
-      </Auth>} />
+      </Auth>} /> */}
 
 
       <Route path="*" element={<NotFound />} />

@@ -10,6 +10,7 @@ function Auth({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true)
         const storedUser = JSON.parse(localStorage.getItem('user'));
 
         if (storedUser) {

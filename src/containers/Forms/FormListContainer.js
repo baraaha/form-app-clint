@@ -3,6 +3,8 @@ import FormServices from '../../services/FormServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from '../../contexts/AuthContextProvider';
 import { Link, useNavigate } from 'react-router-dom';
+import NavBar from '../../components/NavBar';
+import Tooltip from '../../components/Tooltip';
 
 
 
@@ -89,15 +91,7 @@ function FormListContainer() {
             )}
 
             <div>
-                <nav className="bg-blue-500 p-4 flex justify-between items-center">
-                    <span className="text-white text-2xl">form bulider </span>
-                    <div onClick={handleLogout} className="flex items-center">
-                        <img className="h-8 w-8 rounded-full mr-4" src="https://via.placeholder.com/150" alt={user.name} />
-                        <span className="text-white">{user.name}</span>
-                    </div>
-                    <button onClick={showModal} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Invite Friends</button>
-                    <Link to="/form-create" className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Create Form</Link>
-                </nav>
+                <NavBar />
 
                 <div className="container mx-auto p-4">
                     <h2 className="text-2xl font-bold mb-4">Forms</h2>
@@ -125,21 +119,29 @@ function FormListContainer() {
                                         <td className="border px-4 py-2">{form.allow_notifications ? 'Yes' : 'No'}</td>
                                         <td className="border px-4 py-2">{form.published ? 'Yes' : 'No'}</td>
                                         <td className="border px-4 py-2">{form.published_at}</td>
-                                        <td className="border px-4 py-2">{form.expires_at}</td>
+                                        <td className="border px-4 py-2">{form.expires_at ?? 'sss'}</td>
                                         <td className="border px-4 py-2 ">
                                             <div className='flex'>
-                                                <a href={`/edit-form/${form.id}`} className="inline-block m-1 bg-blue-500 text-white px-4 py-1 items-center rounded hover:bg-blue-600">
-                                                    <i class="fa fa-pencil" aria-hidden="true"></i>
 
-                                                </a>
-                                                <a href={`/view-form/${form.id}`} className="inline-block m-1 bg-blue-500 text-white px-4 py-1 items-center rounded hover:bg-blue-600">
-                                                    <i class="fa fa-eye" aria-hidden="true"></i>
 
-                                                </a>
-                                                <button onClick={showModal} className="inline-block m-1 bg-blue-500 text-white px-4 py-1 items-center rounded hover:bg-blue-600">
+
+                                                <Tooltip content="This public link">
+                                                    <Link to={`/form/${form.id}`} target='_blanck' className="inline-block m-1 bg-blue-500 text-white px-4 py-1 items-center rounded hover:bg-blue-600">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i>
+
+                                                    </Link>
+                                                </Tooltip>
+                                                <Tooltip content="submissions form">
+                                                    <Link to={`/submissions/${form.id}`} className="inline-block m-1 bg-blue-500 text-white px-4 py-1 items-center rounded hover:bg-blue-600">
+                                                        <i class="fa fa-address-book" aria-hidden="true"></i>
+
+                                                    </Link>
+                                                </Tooltip>
+
+                                                {/* <button onClick={showModal} className="inline-block m-1 bg-blue-500 text-white px-4 py-1 items-center rounded hover:bg-blue-600">
                                                     <i class="fa fa-terminal" aria-hidden="true"></i>
 
-                                                </button>
+                                                </button> */}
                                             </div>
                                         </td>
                                     </tr>

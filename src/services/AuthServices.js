@@ -1,10 +1,7 @@
 import axios from "../api/axiosConfig";
 import BaseService from "./BaseService";
 
-class FormServices extends BaseService {
-
-
-
+class AuthServices extends BaseService {
 
     /**
      * Retrieve data base on url.
@@ -25,23 +22,6 @@ class FormServices extends BaseService {
             return [];
         }
     }
-
-
-    async getForms() {
-        try {
-            const response = await axios({
-                url: "forms",
-                method: "GET",
-            });
-
-            return response.data;
-        }
-        catch (error) {
-            this.handleRequestError(error);
-            return [];
-        }
-    }
-
 
 
 
@@ -65,6 +45,7 @@ class FormServices extends BaseService {
         }
     }
 
+
 }
 
-export default FormServices;
+export default AuthServices;

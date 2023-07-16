@@ -57,6 +57,7 @@ const DynamicForm = () => {
 
 
     const [formData, setFormData] = useState({});
+    const [defaultFormData, setDefaultFormData] = useState({});
     const [schema, setSchema] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -79,6 +80,7 @@ const DynamicForm = () => {
         });
 
         setFormData(newFormData);
+        setDefaultFormData(newFormData);
     }, [schema]);
 
 
@@ -102,12 +104,13 @@ const DynamicForm = () => {
 
 
     const handleSubmitForm = async (e) => {
+        setError(null);
         e.preventDefault();
         try {
             const data = await formServices.post({ data: formData, form_id: id }, 'submition');
-
+            // console.log(data);
             setError({ type: 'success', message: data.message })
-            setFormData({});
+            setFormData(defaultFormData);
         } catch (error) {
             setError(error);
         }

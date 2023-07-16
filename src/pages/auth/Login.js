@@ -1,33 +1,39 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContextProvider';
+import AuthServices from '../../services/AuthServices';
+import InputFormGroup from '../../components/InputFormGroup';
 
 const Login = () => {
     const [email, setEmail] = useState('');
+    const [validationError, setValidationError] = useState('');
+
     const {
-        user,
         setUser,
         setIsAuthenticated,
     } = useContext(AuthContext);
 
     const navigate = useNavigate();
+    const authServices = new AuthServices();
 
 
-
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const newUser = {
-            "name": "John Doe",
-            "email": email,
-            "verify": false,
-        };
-        setUser(newUser);
-        localStorage.setItem('user', JSON.stringify(newUser));
-        setIsAuthenticated(true);
-        navigate('/otp');
-    };
+        setValidationError('');
 
+        try {
+            const userData = await authServices.post({ email }, 'login');
+            setUser(userData);
+
+            localStorage.setItem('user', JSON.stringify(userData));
+            setIsAuthenticated(true);
+            navigate('/otp');
+        } catch (error) {
+            if (error.validationData) {
+                setValidationError(error.validationData);
+            }
+        }
+    };
     return (
         <div className="min-h-screen flex items-center justify-center bg-blue-200">
             <div className="w-full max-w-6xl flex bg-white rounded-lg  shadow-lg overflow-hidden">
@@ -47,9 +53,18 @@ const Login = () => {
                 <div className="w-1/2 p-12">
                     <h3 className="text-2xl mb-5 text-center">Log In to Continue Your Journey</h3>
                     <form onSubmit={handleSubmit}>
-                        <div className="mb-5">
-                            <label className="block mb-2">email</label>
-                            <input type="text" className="w-full px-4 py-2 border rounded-md" placeholder="Enter your unique username here" value={email} onChange={(e) => setEmail(e.target.value)} required />
+
+                        <div className="mb-2">
+
+                            <InputFormGroup
+                                label='Email'
+                                type='email'
+                                placeholder="Enter your unique username here"
+                                value={email}
+                                col={12}
+                                onChange={(e) => setEmail(e.target.value)}
+                                error={validationError?.email?.[0]}
+                            />
                         </div>
 
 
@@ -60,7 +75,8 @@ const Login = () => {
 
 
                     <div className="mt-5 text-center">
-                        <p>New to Our Form Builder?</p>
+                        <h1>New to Our Form Builder?</h1>
+                        <p>Sign up to start creating your own forms.</p>
                         <Link to="/registration" className="text-blue-500 hover:text-blue-700">Create an Account</Link>
                     </div>
                 </div>
