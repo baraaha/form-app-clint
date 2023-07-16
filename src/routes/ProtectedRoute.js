@@ -1,15 +1,22 @@
 import { useContext } from 'react';
-import { useNavigate, Route } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContextProvider';
 
-export function ProtectedRoute({ children, ...rest }) {
-    const { user } = useContext(AuthContext);
-    let navigate = useNavigate();
+
+
+const ProtectedRoute = ({ redirectPath = '/login', children }) => {
+    const { user } = useContext(AuthContext)
+
 
     if (!user) {
-        navigate('/login');
-        return null;
+        return <Navigate to={redirectPath} replace />;
     }
 
-    return <Route {...rest}>{children}</Route>;
-}
+    if (user && user.verify === false) {
+        return <Navigate to="/otp" replace />;
+    }
+
+    return children ? children : <Outlet />;
+};
+
+export default ProtectedRoute;

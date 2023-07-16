@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 
-const user = { "name": "ahmed" };
-
+import { AuthContext, useAuth } from '../contexts/AuthContextProvider'
+import AuthServices from '../services/AuthServices';
 const NavBar = () => {
-    const handleLogout = () => {
-        console.log('logout')
+
+    const { user, setUser } = useContext(AuthContext);
+
+
+    const authServices = new AuthServices();
+
+
+    const handleLogout = async () => {
+
+
+        try {
+            const response = await authServices.post({}, 'logout');
+            localStorage.removeItem('user');
+            setUser(null);
+
+        } catch (error) {
+            console.log('error', error)
+        }
     }
     return (
         <nav className="bg-blue-500 p-4 flex justify-between items-center">
@@ -27,8 +43,8 @@ const NavBar = () => {
                 <div className="flex mx-3">
                 </div>
                 <div onClick={handleLogout} className="flex  items-center">
-                    <img className="h-8 w-8 rounded-full mr-4" src="https://via.placeholder.com/150" alt={user?.name} />
-                    <span className="text-white">{user?.name}</span>
+                    <img className="h-8 w-8 rounded-full mr-4" src="https://via.placeholder.com/150" alt={user?.user?.name} />
+                    <span className="text-white">{user.user.name}</span>
                 </div>
             </div>
         </nav>

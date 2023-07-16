@@ -4,12 +4,14 @@ import { AuthContext } from '../../contexts/AuthContextProvider';
 import InputFormGroup from '../../components/InputFormGroup';
 import AuthServices from '../../services/AuthServices';
 import Alert from '../../components/Alert';
+import useAuthRedirect from '../../hooks/useAuthRedirect';
 
 const OtpVerification = () => {
 
     const [otp, setOtp] = useState("");
     const [error, setError] = useState("");
     const [validationError, setValidationError] = useState('');
+
 
 
     const { user, setUser } = useContext(AuthContext);
@@ -19,19 +21,43 @@ const OtpVerification = () => {
     const authServices = new AuthServices();
 
 
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        console.log('user', user)
+        if (user?.verify) {
+            navigate('/forms');
+        } else if (!user) {
+            navigate('/login');
+        }
+        setLoading(false); // <- stop loading once user check is complete
+    }, [user]);
+
+
+
+
     const otpVerify = async (e) => {
         e.preventDefault();
         setValidationError('');
         setError('');
-        // console.log('user', user);
-        // return;
+
 
         try {
             const userData = await authServices.post({ otp }, 'verifyOTP');
 
-            setUser(userData);
+            const updatedUser = {
+                ...user,
+                verify: true,
+            };
+
+
+            // Update the user state
+            setUser(updatedUser);
+
+            // Update the user in the localStorage
             localStorage.setItem('user', JSON.stringify(updatedUser));
             navigate('/forms');
+
 
         } catch (error) {
             setError(error);
@@ -47,9 +73,6 @@ const OtpVerification = () => {
         setValidationError('');
         setError('');
 
-        // setUser(JSON.parse(localStorage.getItem('user')))
-
-        // return;
         try {
             const userData = await authServices.post(null, 'resendOTP');
             setError({ type: 'success', message: userData.message });
@@ -60,6 +83,8 @@ const OtpVerification = () => {
             }
         }
     }
+
+    if (loading) return null;
 
 
     return (

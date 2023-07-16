@@ -3,17 +3,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContextProvider';
 import AuthServices from '../../services/AuthServices';
 import InputFormGroup from '../../components/InputFormGroup';
+import useAuthRedirect from '../../hooks/useAuthRedirect';
 
 const Registration = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [validationError, setValidationError] = useState('');
 
-    const {
-        setUser,
-        setIsAuthenticated,
-    } = useContext(AuthContext);
+    const [loading, setLoading] = useState(true);
 
+    const { user } = useContext(AuthContext);
+
+    useAuthRedirect();
+    useEffect(() => {
+        if (user) {
+            if (user && !user.verify) {
+                navigate('/otp');
+            } else {
+                navigate('/forms');
+            }
+        }
+
+        setLoading(false); // <- stop loading once user check is complete
+    }, [user]);
     const navigate = useNavigate();
     const authServices = new AuthServices();
 
@@ -35,6 +47,10 @@ const Registration = () => {
             }
         }
     };
+
+
+    if (loading) return null; // <- render null when loading is true (user check is in progress
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-blue-200">
             <div className="w-full max-w-6xl flex bg-white rounded-lg  shadow-lg overflow-hidden">

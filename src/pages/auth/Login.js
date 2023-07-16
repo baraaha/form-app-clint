@@ -3,15 +3,30 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContextProvider';
 import AuthServices from '../../services/AuthServices';
 import InputFormGroup from '../../components/InputFormGroup';
+import useAuthRedirect from '../../hooks/useAuthRedirect';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [validationError, setValidationError] = useState('');
 
-    const {
-        setUser,
-        setIsAuthenticated,
-    } = useContext(AuthContext);
+
+    const { user, setUser } = useContext(AuthContext);
+
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+
+        if (user) {
+            if (user && !user.verify) {
+                navigate('/otp');
+            } else {
+                navigate('/forms');
+            }
+        }
+        setLoading(false); // <- stop loading once user check is complete
+    }, [user]);
+
+
 
     const navigate = useNavigate();
     const authServices = new AuthServices();
@@ -20,7 +35,6 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setValidationError('');
-
         try {
             const userData = await authServices.post({ email }, 'login');
             setUser(userData);
@@ -34,6 +48,11 @@ const Login = () => {
             }
         }
     };
+
+    if (loading) {
+        return null; // or return a loading spinner
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-blue-200">
             <div className="w-full max-w-6xl flex bg-white rounded-lg  shadow-lg overflow-hidden">

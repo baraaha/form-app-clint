@@ -5,6 +5,7 @@ import InputFormGroup from '../../components/InputFormGroup';
 import SelectFormGroup from '../../components/SelectFormGroup';
 import FormServices from '../../services/FormServices';
 import NavBar from '../../components/NavBar';
+import { useNavigate } from 'react-router-dom';
 
 
 const defaultInputData = {
@@ -101,6 +102,8 @@ const FormBuilder = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [validation, setValidation] = useState([]);
 
+    const navigate = useNavigate();
+
 
     const onDelete = (index) => {
         const newElements = [...elements];
@@ -143,12 +146,11 @@ const FormBuilder = () => {
 
     const submitForm = async () => {
         setValidation([]);
-        console.log(elements);
 
 
         try {
             const response = await formServices.post({ ...formData, elements: elements }, 'form/create');
-            console.log(response);
+            navigate('/forms')
 
         } catch (error) {
             if (error.validationData) {
